@@ -8,7 +8,7 @@
 
 ### Version 1.0.16
 
-Date: _not yet released_
+Date: 2026-10-05
 
 - A trust mark that could not be fetched is tried again after a short retry interval (`trust-mark-retry-interval`,
   default one minute), and the entity configuration gets the trust mark as soon as it has been obtained. Before, the
