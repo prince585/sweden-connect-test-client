@@ -830,7 +830,7 @@ class AuthorizationParameterResolverTest {
 
     Assertions.assertFalse(result.parameters().containsKey(SIGN_REQUEST));
     final Map<String, Object> signRequest = map(requestObjectClaims(result).getClaim(SIGN_REQUEST));
-    Assertions.assertEquals(Set.of("sign_message"), signRequest.keySet());
+    Assertions.assertEquals(Set.of("sign_message", "aud", "iss"), signRequest.keySet());
     Assertions.assertEquals(Map.of(
         "message#sv", b64("Meddelande"),
         "message#en", b64("Message"),
@@ -950,7 +950,7 @@ class AuthorizationParameterResolverTest {
 
     for (final boolean inUrl : List.of(true, false)) {
       final Map<String, Object> signRequest = signRequest(result, inUrl);
-      Assertions.assertEquals(Set.of("tbs_data", "sign_message"), signRequest.keySet(), "inUrl=" + inUrl);
+      Assertions.assertEquals(Set.of("tbs_data", "sign_message", "aud", "iss"), signRequest.keySet(), "inUrl=" + inUrl);
       Assertions.assertEquals("Data to sign", unb64(signRequest.get("tbs_data")), "inUrl=" + inUrl);
       Assertions.assertEquals("Meddelande", unb64(map(signRequest.get("sign_message")).get("message#sv")));
     }
@@ -1000,7 +1000,7 @@ class AuthorizationParameterResolverTest {
         ? new ECKeyGenerator(Curve.P_256).generate()
         : new RSAKeyGenerator(2048).generate();
     Assertions.assertFalse(jwt.verify(verifier(unrelatedKey)));
-    Assertions.assertEquals(Set.of("tbs_data", "sign_message"), jwt.getJWTClaimsSet().getClaims().keySet(),
+    Assertions.assertEquals(Set.of("tbs_data", "sign_message", "aud", "iss"), jwt.getJWTClaimsSet().getClaims().keySet(),
         "The claims set is the sign request object only");
   }
 
