@@ -62,9 +62,11 @@ public class OidcMessageSerializer {
    * @return the sign request object
    */
   @Nonnull
-  public static Map<String, Object> toSignRequest(@Nonnull final SignatureParameterModel signRequest) {
+  public static Map<String, Object> toSignRequest(@Nonnull final SignatureParameterModel signRequest, final OIDCAuthnRequestParameterModel model) {
     final boolean encode = Boolean.TRUE.equals(signRequest.getB64Encode());
     final Map<String, Object> value = new LinkedHashMap<>();
+    value.put("aud", model.getOp()); // Added aud
+    value.put("iss", model.getRp()); // Added iss
     if (!Boolean.FALSE.equals(signRequest.getIncludeTbsData()) && signRequest.getTbsData() != null) {
       value.put("tbs_data", encode(signRequest.getTbsData(), encode));
     }

@@ -126,7 +126,7 @@ public class RequestObjectFactory {
     final SignatureParameterModel signRequest = model.getSignMessage();
     final JWTClaimsSet claims;
     try {
-      claims = JWTClaimsSet.parse(OidcMessageSerializer.toSignRequest(signRequest));
+      claims = JWTClaimsSet.parse(OidcMessageSerializer.toSignRequest(signRequest, model));
     }
     catch (final java.text.ParseException e) {
       throw new ParseException("Invalid sign request: " + e.getMessage(), e);
@@ -162,7 +162,7 @@ public class RequestObjectFactory {
     resolver.getUserMessage().ifPresent(um ->
         builder.claim(OidcMessageSerializer.USER_MESSAGE, OidcMessageSerializer.toUserMessage(um)));
     resolver.getSignMessage().ifPresent(sig ->
-        builder.claim(OidcMessageSerializer.SIGN_REQUEST, OidcMessageSerializer.toSignRequest(sig)));
+        builder.claim(OidcMessageSerializer.SIGN_REQUEST, OidcMessageSerializer.toSignRequest(sig, model)));
 
     resolver.getClientId().ifPresent(clientId -> builder.claim("client_id", clientId.getValue()));
     resolver.getNonce().ifPresent(nonce -> builder.claim("nonce", nonce.getValue()));
